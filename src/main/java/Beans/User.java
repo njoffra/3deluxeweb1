@@ -9,7 +9,7 @@ public class User {
     private int id;
     private String username;
     private String address;
-    private short role;
+    private int role;
     private String password;
     private String email;
 
@@ -48,11 +48,11 @@ public class User {
         this.address = address;
     }
 
-    public short getRole() {
+    public int getRole() {
         return this.role;
     }
 
-    public void setRole(short role) {
+    public void setRole(int role) {
         this.role = role;
     }
 }

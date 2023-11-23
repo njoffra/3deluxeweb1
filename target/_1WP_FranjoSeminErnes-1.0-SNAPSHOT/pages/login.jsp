@@ -122,13 +122,13 @@
         <div class="form-group">
             <button type="submit" class="btn btn-block create-account">Login</button>
         </div>
-        <hr>
+        <!--<hr>-->
         <div class="form-group">
             <a href="${pageContext.request.contextPath}/pages/register.jsp" class="btn btn-block create-account" style="background-color: aqua">Register</a>
         </div>
-        <div class="form-group">
+        <!--<div class="form-group">
             <a href="${pageContext.request.contextPath}/Guest" class="btn btn-block create-account" style="background-color: yellowgreen">Login as guest</a>
-        </div>
+        </div>-->
     </form>
 </div>
 </body>

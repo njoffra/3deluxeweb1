@@ -21,7 +21,7 @@ public class AdminServlet extends HttpServlet {
             response.getWriter().println("Welcome, Admin!");
             response.sendRedirect(request.getContextPath()+ "/pages/admin.jsp");
         } else {
-            response.sendRedirect(request.getContextPath() + "/login.jsp?error=admin");
+            response.sendRedirect(request.getContextPath() + "/pages/login.jsp?error=admin");
         }
     }
 

@@ -26,74 +26,59 @@ public class LoginServlet extends HttpServlet {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
-        User user = new User();
-        user.setUsername(username);
-        user.setPassword(password);
+        User authenticatedUser = validateUser(username, password);
 
-        if (validateUser(user)) {
+        if (authenticatedUser != null) {
             HttpSession session = request.getSession();
-            session.setAttribute("user", user);
-            int userRole = user.getRole();
+            session.setAttribute("user", authenticatedUser);
+            int userRole = authenticatedUser.getRole();
             session.setAttribute("role", userRole);
-            response.sendRedirect(request.getContextPath() + "/home.jsp");
+
+            System.out.println("User Role: " + userRole);
+
+            if (userRole == 2) {
+                response.sendRedirect(request.getContextPath() + "/pages/admin.jsp");
+            } else {
+                response.sendRedirect(request.getContextPath() + "/home.jsp");
+            }
         } else {
             response.sendRedirect(request.getContextPath() + "/login.jsp?error=login");
         }
+
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.sendRedirect(request.getContextPath() + "/pages/login.jsp");
     }
 
-    private boolean validateUser(User user) {
+    private User validateUser(String username, String password) {
+        User user = null;
+
         try {
             Connection con = DB.getInstance().getConnection();
 
-            boolean result;
-
             try {
                 PreparedStatement preparedStatement = con.prepareStatement("SELECT * FROM users WHERE username=? AND password=?");
+                preparedStatement.setString(1, username);
+                preparedStatement.setString(2, password);
+                ResultSet resultSet = preparedStatement.executeQuery();
 
-                try {
-                    preparedStatement.setString(1, user.getUsername());
-                    preparedStatement.setString(2, user.getPassword());
-                    ResultSet resultSet = preparedStatement.executeQuery();
-                    result = resultSet.next();
-                } catch (Throwable var9) {
-                    if (preparedStatement != null) {
-                        try {
-                            preparedStatement.close();
-                        } catch (Throwable var8) {
-                            var9.addSuppressed(var8);
-                        }
-                    }
-
-                    throw var9;
+                if (resultSet.next()) {
+                    user = new User();
+                    user.setUsername(resultSet.getString("username"));
+                    user.setEmail(resultSet.getString("email"));
+                    user.setAddress(resultSet.getString("address"));
+                    user.setPassword(resultSet.getString("password"));
+                    user.setRole(resultSet.getShort("role"));
                 }
-
-                if (preparedStatement != null) {
-                    preparedStatement.close();
-                }
-            } catch (Throwable var10) {
-                if (con != null) {
-                    try {
-                        con.close();
-                    } catch (Throwable var7) {
-                        var10.addSuppressed(var7);
-                    }
-                }
-
-                throw var10;
-            }
-
-            if (con != null) {
+            } finally {
                 con.close();
             }
-
-            return result;
-        } catch (SQLException var11) {
-            var11.printStackTrace();
-            return false;
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+
+        return user;
     }
+
 }

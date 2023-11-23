@@ -8,10 +8,11 @@ CREATE TABLE IF NOT EXISTS users (
                                      email VARCHAR(50) NOT NULL,
                                      address VARCHAR(100) NOT NULL,
                                      password VARCHAR(100) NOT NULL,
-                                     role SMALLINT NOT NULL
+                                     role INT NOT NULL
 );
+ALTER TABLE users
+    MODIFY COLUMN role INT NOT NULL;
 
--- Create the products table
 CREATE TABLE IF NOT EXISTS products (
                                         id INT PRIMARY KEY AUTO_INCREMENT,
                                         name VARCHAR(50) NOT NULL,

@@ -14,7 +14,7 @@ public class FolderUtils {
     }
 
     public static String getImagesFolderPath(ServletContext servletContext) {
-        String realPath = servletContext.getRealPath("/"); // Get the real path on the server
+        String realPath = servletContext.getRealPath("/");
         return realPath + File.separator + "images";
     }
 }

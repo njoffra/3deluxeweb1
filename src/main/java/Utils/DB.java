@@ -5,9 +5,7 @@
 
 package Utils;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class DB {
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/1DB_FranjoSeminErnes";
@@ -20,10 +18,39 @@ public class DB {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             this.con = DriverManager.getConnection("jdbc:mysql://localhost:3306/1DB_FranjoSeminErnes", "franjo", "password");
+            if (!adminUserExists(con)) {
+
+                insertAdminUser(con);
+            }
         } catch (Exception var2) {
             var2.printStackTrace();
         }
 
+    }
+    private boolean adminUserExists(Connection connection) {
+        try (Statement statement = connection.createStatement()) {
+            ResultSet resultSet = statement.executeQuery("SELECT COUNT(*) FROM users WHERE username = 'admin'");
+            resultSet.next();
+            int count = resultSet.getInt(1);
+            return count > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private void insertAdminUser(Connection connection) {
+        try (Statement statement = connection.createStatement()) {
+            int rowsAffected = statement.executeUpdate("INSERT INTO users (username, email, password, address, role) VALUES ('admin', 'admin@example.com', 'adminpassword', 'Admin Address', 2)");
+            if (rowsAffected > 0) {
+                System.out.println("Admin user inserted successfully.");
+            } else {
+                System.err.println("Failed to insert admin user.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Error inserting admin user.");
+        }
     }
 
     public static synchronized DB getInstance() {

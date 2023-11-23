@@ -43,7 +43,7 @@ public class RegisterServlet extends HttpServlet {
                             preparedStatement.setString(2, user.getEmail());
                             preparedStatement.setString(3, user.getPassword());
                             preparedStatement.setString(4, user.getAddress());
-                            preparedStatement.setShort(5, user.getRole());
+                            preparedStatement.setInt(5, user.getRole());
                             int rowsAffected = preparedStatement.executeUpdate();
                             var6 = rowsAffected > 0;
                         } catch (Throwable var9) {
@@ -111,7 +111,7 @@ public class RegisterServlet extends HttpServlet {
                 newUser.setEmail(email);
                 newUser.setPassword(password);
                 newUser.setAddress(address);
-                newUser.setRole((short)1);
+                newUser.setRole(1);
                 boolean isRegistered = this.registerUser(newUser);
                 if (isRegistered) {
                     out.println("Registration successful!");
